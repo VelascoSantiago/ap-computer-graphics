@@ -86,14 +86,65 @@ Lo de `dependencias/` se arma **una sola vez** al inicio del semestre.
 | Paso | Comando | Qué hace | Ejemplo |
 |---|---|---|---|
 | 1. Nueva práctica | `./nueva_practica.sh N ruta_al_zip` | Descomprime en `pN/`, copia el CMakeLists genérico, compila | `./nueva_practica.sh 4 ~/Downloads/practica4.zip` |
-| 2. Revisar si usa GLEW | `grep -l "glew" pN/*.cpp pN/*.h` | Si imprime archivos, el código viejo usa GLEW y hay que adaptarlo | `grep -l "glew" p4/*.cpp p4/*.h` |
-| 3. Cambiar el include | `sed -i 's/PATRON_VIEJO/PATRON_NUEVO/' archivo` | Reemplaza el header de GLEW por el de GLAD | `sed -i 's/#include <GL\/glew.h>/#include <glad\/glad.h>/' p4/*.cpp p4/*.h` |
-| 4. Cambiar la inicialización | script de Python con lista `archivos = [...]` | Reemplaza el bloque `glewInit()` por `gladLoadGLLoader(...)` | editar `archivos = ["p4/Main_P4.cpp"]` y correr `python3 fix_glew.py` |
-| 5. Compilar | `cd build && cmake .. && make -jN` | Regenera el proyecto y compila todo | `cd build && cmake .. && make -j$(nproc)` |
-| 6. Ejecutar | `cd carpeta_binario && ./binario` | Corre desde su propia carpeta (ahí están los shaders copiados) | `cd p4 && ./p4` |
-| 7. Iterar código | editar → `make -jN` desde `build/` | Recompila solo lo que cambió, sin repetir `cmake ..` | editar `p4/Main_P4.cpp` → `cd build && make -j$(nproc)` → `cd p4 && ./p4` |
+| 2. Adaptar GLEW → GLAD | `python3 fix_glew.py pN` | Reemplaza el `#include <GL/glew.h>` por `<glad/glad.h>` y el bloque `glewInit()` por `gladLoadGLLoader(...)` en todos los `.cpp`/`.h` de esa carpeta. Si no encuentra nada que cambiar, lo dice y no rompe nada | `python3 fix_glew.py p4` |
+| 3. Compilar | `cd build && cmake .. && make -jN` | Regenera el proyecto y compila todo | `cd build && cmake .. && make -j$(nproc)` |
+| 4. Ejecutar | `cd carpeta_binario && ./binario` | Corre desde su propia carpeta (ahí están los shaders copiados) | `cd p4 && ./p4` |
+| 5. Iterar código | editar → `make -jN` desde `build/` | Recompila solo lo que cambió, sin repetir `cmake ..` | editar `p4/Main_P4.cpp` → `cd build && make -j$(nproc)` → `cd p4 && ./p4` |
 
-Los pasos 2-4 solo aplican si el zip trae código viejo de GLEW. Si ya viene pensado para GLAD, saltas del paso 1 al 5.
+El paso 2 solo hace falta si el zip trae código viejo de GLEW (la mayoría de las prácticas del curso). Correrlo siempre es seguro — si no hay nada que cambiar, `fix_glew.py` no toca los archivos y lo confirma en pantalla. Si ya viene pensado para GLAD, saltas directo del paso 1 al 3.
+
+### `fix_glew.py` — código completo
+
+Vive en la raíz del proyecto, junto a `nueva_practica.sh`. Se corre una sola vez por práctica:
+```bash
+python3 fix_glew.py pN
+```
+
+```python
+#!/usr/bin/env python3
+import re
+import sys
+import glob
+
+if len(sys.argv) != 2:
+    print("uso: python3 fix_glew.py <carpeta>   (ej: python3 fix_glew.py p1)")
+    sys.exit(1)
+
+carpeta = sys.argv[1]
+archivos = glob.glob(f"{carpeta}/*.cpp") + glob.glob(f"{carpeta}/*.h")
+
+if not archivos:
+    print(f"No se encontraron .cpp/.h en {carpeta}")
+    sys.exit(1)
+
+patron_include = re.compile(r'#include\s*<GL/glew\.h>')
+patron_init = re.compile(
+    r'glewExperimental = GL_TRUE;.*?return EXIT_FAILURE;\n\t\}',
+    re.DOTALL
+)
+reemplazo_init = (
+    'if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {\n'
+    '\t\tstd::cout << "Failed to initialise GLAD" << std::endl;\n'
+    '\t\treturn EXIT_FAILURE;\n'
+    '\t}'
+)
+
+for ruta in archivos:
+    with open(ruta, "r", encoding="utf-8", errors="replace") as f:
+        contenido = f.read()
+
+    contenido, n_include = patron_include.subn('#include <glad/glad.h>', contenido)
+    contenido, n_init = patron_init.subn(reemplazo_init, contenido)
+
+    if n_include or n_init:
+        with open(ruta, "w", encoding="utf-8") as f:
+            f.write(contenido)
+        print(f"OK  - {ruta} (include: {n_include}, init: {n_init})")
+    else:
+        print(f"sin cambios - {ruta}")
+```
+
+Si algún archivo dice "sin cambios" pero tú sabes que sí usa GLEW (por ejemplo el patrón de `glewInit()` viene escrito distinto ese año), tocará arreglarlo a mano esa vez — no todos los profes escriben el bloque idéntico.
 
 ---
 
