@@ -1,1 +1,13 @@
 *.pdf
+# Directorios de compilación y binarios
+build/
+out/
+bin/
+*.o
+*.out
+
+# Configuraciones locales del editor
+.vscode/
+
+# Dependencias de terceros (añade aquí las futuras)
+dependencias/glm/
