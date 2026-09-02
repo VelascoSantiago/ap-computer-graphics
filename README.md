@@ -2,6 +2,49 @@
 
 Setup reutilizable para las prácticas semanales del curso, usando CMake + GLFW + GLAD + GLM en vez del stack de Visual Studio (GLEW).
 
+## Setup inicial (solo una vez, en una máquina nueva)
+
+Esto es lo que hay que hacer **antes** de poder usar el pipeline de abajo — ya sea porque acabas de formatear, tienes una laptop nueva, o vas a clonar este repo en otra máquina.
+
+### 1. Herramientas de compilación
+```bash
+sudo apt update
+sudo apt install build-essential cmake git
+```
+
+### 2. Librerías de desarrollo de OpenGL/X11
+```bash
+sudo apt install libgl1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+```
+
+### 3. GLFW (crea la ventana/contexto)
+```bash
+sudo apt install libglfw3-dev
+```
+
+### 4. Clona este repo (si es máquina nueva)
+```bash
+git clone <url-de-tu-repo> CGhci
+cd CGhci
+```
+Como `dependencias/glm` y `dependencias/Shader.h` ya viven en el repo, no hay que rearmarlos. Solo falta GLAD (paso 5), porque son archivos generados que no se versionan igual en todos los setups — revisa primero si `dependencias/glad/` ya viene en el repo; si es así, sáltate el paso 5.
+
+### 5. GLAD (solo si `dependencias/glad/` no existe todavía)
+Ve a https://glad.dav1d.de, elige Language=C/C++, API gl=Version 3.3, Profile=Core, dale "GENERATE" y descarga el zip. Descomprímelo dentro de `dependencias/glad`, de modo que quede `dependencias/glad/include` y `dependencias/glad/src/glad.c`.
+
+### 6. VS Code y extensiones
+Instala las extensiones "C/C++" (Microsoft) y "CMake Tools" (Microsoft) desde el marketplace de VS Code. Con CMake Tools puedes compilar (botón `Build` o `F7`) y correr (▶ junto a `Build`, en la barra inferior) sin tocar la terminal.
+
+### 7. Primera compilación
+```bash
+mkdir -p build
+cd build
+cmake ..
+make -j$(nproc)
+```
+
+Con esto, el entorno queda listo para usar el pipeline semanal de abajo.
+
 ## Estructura del proyecto
 
 ```
