@@ -226,8 +226,8 @@ int main() {
 		// Pieza 1: tallo vertical -- prisma alto y delgado
 		glm::mat4 model1 = glm::mat4(1);
 		model1 = glm::translate(model1, glm::vec3(0.0f, 1.0f, 0.0f));
-		//model1 = glm::rotate(model1, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // eje X puro
-		//model1 = glm::rotate(model1, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // eje Y puro
+		model1 = glm::rotate(model1, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // eje X puro
+		model1 = glm::rotate(model1, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // eje Y puro
 		model1 = glm::scale(model1, glm::vec3(2.0f, 6.0f, 1.0f));
 		
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model1));
@@ -235,10 +235,10 @@ int main() {
 		
 		// Pieza 2: pie horizontal -- prisma ancho y bajo
 		glm::mat4 model2 = glm::mat4(1);
-		model2 = glm::translate(model2, glm::vec3(-1.0f, -3.0f, 0.0f));
-		//model2 = glm::rotate(model2, glm::radians(210.0f), glm::vec3(1.0f, 0.0f, 0.0f));  // eje x puro
-		//model2 = glm::rotate(model2, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // eje Y puro
-		model2 = glm::scale(model2, glm::vec3(4.0f, 2.0f, 1.0f));
+		model2 = glm::translate(model2, glm::vec3(-0.98f, -3.0f, -2.2f));
+		model2 = glm::rotate(model2, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));  // eje x puro
+		model2 = glm::rotate(model2, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // eje Y puro
+		model2 = glm::scale(model2, glm::vec3(5.0f, 2.0f, 1.0f));
 		
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model2));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -246,9 +246,9 @@ int main() {
 		//// Pieza 3: punto de la j -- cubo, girado sobre z
 		glm::mat4 model3 = glm::mat4(1);
 		model3 = glm::translate(model3, glm::vec3(0.0f, 5.5f, 0.0f));
-		//model3 = glm::rotate(model3, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // eje z puro
-		//model3 = glm::rotate(model3, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // eje X puro
-		//model3 = glm::rotate(model3, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // eje Y puro
+		model3 = glm::rotate(model3, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // eje z puro
+		model3 = glm::rotate(model3, glm::radians(210.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // eje X puro
+		model3 = glm::rotate(model3, glm::radians(315.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // eje Y puro
 		model3 = glm::scale(model3, glm::vec3(1.5f, 1.5f, 1.5f));
 		
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model3));
