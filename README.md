@@ -243,6 +243,13 @@ glxinfo | grep "OpenGL version"
 ```
 (si `glxinfo` no existe: `sudo apt install mesa-utils`)
 
+### Quiero iterar sobre el mismo códigocd build
+```bash
+cd build
+make -j$(nproc)
+cd pN
+./pN
+
 ---
 
 ## `.gitignore`
