@@ -11,10 +11,10 @@ find_package(glfw3 REQUIRED)
 add_library(glad STATIC dependencias/glad/src/glad.c)
 target_include_directories(glad PUBLIC dependencias/glad/include)
 
-# Auto-descubre cualquier carpeta pN que tenga su propio CMakeLists.txt
-file(GLOB PRACTICAS RELATIVE ${CMAKE_SOURCE_DIR} p*)
-foreach(practica ${PRACTICAS})
-    if(EXISTS ${CMAKE_SOURCE_DIR}/${practica}/CMakeLists.txt)
-        add_subdirectory(${practica})
+# Auto-descubre cualquier carpeta que tenga su propio CMakeLists.txt
+file(GLOB TODAS_LAS_CARPETAS RELATIVE ${CMAKE_SOURCE_DIR} *)
+foreach(carpeta ${TODAS_LAS_CARPETAS})
+    if(EXISTS ${CMAKE_SOURCE_DIR}/${carpeta}/CMakeLists.txt AND NOT carpeta STREQUAL "template")
+        add_subdirectory(${carpeta})
     endif()
 endforeach()
