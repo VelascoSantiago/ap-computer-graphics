@@ -55,18 +55,11 @@ fi
 # "Target links to GLEW::GLEW but the target was not found".
 cp template/CMakeLists.txt "$DIR/CMakeLists.txt"
 
-# Compilar (si build/ no existe todavía, avisar en vez de fallar)
-if [ ! -d build ]; then
-    echo ""
-    echo "No existe la carpeta build/ todavía. Corre primero:"
-    echo "  mkdir build && cd build && cmake .. && make -j\$(nproc)"
-    exit 0
-fi
-
-cd build
-cmake ..
-make -j"$(nproc)"
-
+# NO compilamos acá a propósito: si el origen trae código con GLEW viejo,
+# primero hay que correr fix_glew.py (paso 2 del pipeline). Compilar antes
+# de eso produce errores de "undefined reference to __glewXxx".
 echo ""
-echo "Listo -> ejecutables generados en build/$DIR/ (si ya hay .cpp):"
-ls "$DIR" 2>/dev/null | grep -v CMakeFiles || echo "(todavía no hay .cpp para compilar)"
+echo "Listo. Antes de compilar, revisa si el código trae GLEW viejo:"
+echo "  python3 fix_glew.py $DIR"
+echo "Luego compila:"
+echo "  cd build && cmake .. && make -j\$(nproc)"
