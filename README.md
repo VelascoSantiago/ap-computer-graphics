@@ -45,12 +45,14 @@ mkdir build && cd build && cmake .. && make -j$(nproc)
 
 ## Pipeline por práctica/proyecto
 
-| Paso | Comando |
-|---|---|
-| 1. Crear | `./nueva_practica.sh <nombre> <origen>` — ver modos abajo |
-| 2. Arreglar GLEW→GLAD (si aplica) | `python3 fix_glew.py <nombre>` |
-| 3. Compilar | `cd build && cmake .. && make -j$(nproc)` |
-| 4. Correr | `cd build/<nombre> && ./<nombre>_<archivo>` |
+**El script solo crea la carpeta — no compila.** Es a propósito: si compilara automático, se saltaría el paso 2 (arreglar GLEW) y el build fallaría con `undefined reference to __glewXxx`. Siempre corré los 4 pasos en orden.
+
+| Paso | Comando | Ejemplo |
+|---|---|---|
+| 1. Crear | `./nueva_practica.sh <nombre> <origen>` — ver modos abajo | `./nueva_practica.sh p3 ~/Downloads/ModeladoGeometrico.zip` |
+| 2. Arreglar GLEW→GLAD (si aplica) | `python3 fix_glew.py <nombre>` | `python3 fix_glew.py p3` |
+| 3. Compilar | `cd build && cmake .. && make -j$(nproc)` | `cd build && cmake .. && make -j$(nproc)` |
+| 4. Correr | `cd build/<nombre> && ./<nombre>_<archivo>` | `cd build/p3 && ./p3_Main_Modelado` |
 
 **`<nombre>`** puede ser cualquier cosa: `p4`, `proyecto_final`, etc. No hace falta que empiece con `p`.
 
@@ -177,20 +179,13 @@ fi
 # haya traído uno propio (típicamente viejo, con GLEW).
 cp template/CMakeLists.txt "$DIR/CMakeLists.txt"
 
-if [ ! -d build ]; then
-    echo ""
-    echo "No existe build/ todavía. Corre primero:"
-    echo "  mkdir build && cd build && cmake .. && make -j\$(nproc)"
-    exit 0
-fi
-
-cd build
-cmake ..
-make -j"$(nproc)"
-
+# NO compila acá a propósito: si el código trae GLEW viejo, primero hay que
+# correr fix_glew.py (paso 2 del pipeline).
 echo ""
-echo "Listo -> ejecutables en build/$DIR/:"
-ls "$DIR" 2>/dev/null | grep -v CMakeFiles || echo "(todavía no hay .cpp para compilar)"
+echo "Listo. Antes de compilar, revisa si el código trae GLEW viejo:"
+echo "  python3 fix_glew.py $DIR"
+echo "Luego compila:"
+echo "  cd build && cmake .. && make -j\$(nproc)"
 ```
 </details>
 
