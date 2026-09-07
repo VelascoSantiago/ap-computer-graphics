@@ -78,6 +78,14 @@ cd build && cmake ..
 - `Ctrl+Shift+P` → `CMake: Set Build Target` (cuál compilar)
 - `Ctrl+Shift+P` → `CMake: Select Launch Target` (cuál correr/debuggear)
 
+**Para el día a día, una vez compilado por primera vez:** conviene seguir todo desde la paleta de comandos de VS Code (`Ctrl+Shift+P`) en vez de la terminal:
+- `F7` (o el botón "Build" de la barra inferior) → compila el target seleccionado.
+- ▶ (Run/Debug, barra inferior) → corre el target seleccionado como launch.
+
+Con el build target y el launch target ya elegidos una vez, alcanza con guardar el `.cpp` y darle `F7`/▶ — no hace falta volver a la terminal. Las únicas excepciones donde sí hay que pasar por terminal:
+- Agregaste un `.cpp` nuevo a la carpeta → `cd build && cmake ..` (o `Ctrl+Shift+P` → `CMake: Configure`) para que el GLOB lo detecte.
+- Es una práctica nueva con GLEW viejo → `python3 fix_glew.py <carpeta>` antes de compilar por primera vez.
+
 ## Troubleshooting rápido
 
 | Síntoma | Solución |
