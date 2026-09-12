@@ -241,10 +241,10 @@ int main() {
 		// flor
 		model = glm::mat4(1.0f);
 		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 3.2f, 0.0f));
 		model = glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		//model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		//model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
