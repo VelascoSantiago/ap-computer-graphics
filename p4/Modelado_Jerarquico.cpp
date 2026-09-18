@@ -22,6 +22,10 @@ float movX = 0.0f,
 float hombro = 0.0f;
 float forearm = 0.0f;
 float hand = 0.0f;
+float finger = 0.0f;
+float finger_tip = 0.0f;
+float thumb = 0.0f;
+float thumb_tip = 0.0f;
 
 int main()
 {
@@ -251,51 +255,83 @@ int main()
 
 		glBindVertexArray(VAO);
 
-		// Model bicep
-		model = glm::rotate(model, glm::radians(hombro), glm::vec3(0.0f, 0.0, 1.0f)); // hombro
-		modelTemp = model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
-		color = glm::vec3(0.0f, 1.0f, 0.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36); // A
+		// 1. Model Bicep
+        model = glm::rotate(model, glm::radians(hombro), glm::vec3(0.0f, 0.0, 1.0f));
+        glm::mat4 pivotBicep = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f)); // Centro del bicep
+        model = glm::scale(pivotBicep, glm::vec3(3.0f, 1.0f, 1.0f));
+        color = glm::vec3(0.0f, 1.0f, 0.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // A
 
-		// Model forearm
-		model = glm::translate(modelTemp, glm::vec3(1.5f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(forearm), glm::vec3(0.0f, 1.0, 0.0f)); // forearm
-		modelTemp = model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 1.0f, 1.0f));
-		color = glm::vec3(1.0f, 0.0f, 0.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36); // B
+        // 2. Model Forearm
+        // Partimos del centro del bicep (pivotBicep) y nos movemos a su extremo (1.5 en X)
+        model = glm::translate(pivotBicep, glm::vec3(1.5f, 0.0f, 0.0f)); 
+        model = glm::rotate(model, glm::radians(forearm), glm::vec3(0.0f, 1.0, 0.0f));
+        glm::mat4 pivotForearm = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f)); // Centro del antebrazo
+        model = glm::scale(pivotForearm, glm::vec3(2.0f, 1.0f, 1.0f));
+        color = glm::vec3(1.0f, 0.0f, 0.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // B
 
-		// Model hand
-		model = glm::translate(modelTemp, glm::vec3(1.0f, 0.0f, 0.0f)); // inicio desde el extremo del antebrazo
-		model = glm::rotate(model, glm::radians(hand), glm::vec3(1.0f, 0.0f, 0.0f)); // giro de la mano
-		modelTemp = model = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f)); // pos local de la mano
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		color = glm::vec3(0.0f, 0.0f, 1.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36); // C
+        // 3. Model Hand
+        // Partimos del centro del antebrazo y nos movemos a la muñeca
+        model = glm::translate(pivotForearm, glm::vec3(1.0f, 0.0f, 0.0f)); 
+        model = glm::rotate(model, glm::radians(hand), glm::vec3(1.0f, 0.0f, 0.0f)); 
+        glm::mat4 pivotHand = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f)); // ¡MATRIZ CLAVE! Centro de la mano
+        model = glm::scale(pivotHand, glm::vec3(1.0f, 1.0f, 1.0f));
+        color = glm::vec3(0.0f, 0.0f, 1.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // C
 
-		// Model finger base
-		model = glm::translate(modelTemp, glm::vec3(0.5f, 0.0f, 0.0f)); // inicio desde el extremo de la mano
-		model = glm::scale(model, glm::vec3(0.9f, 0.2f, 0.8f));
-		modelTemp = model = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f)); // pos local de la base del dedo
-		color = glm::vec3(1.0f, 1.0f, 0.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36); // D
+        // ----------------- RAMIFICACIÓN: DEDOS -----------------
 
-		// Model finger tip
-		model = glm::translate(modelTemp, glm::vec3(0.5f, 0.0f, 0.0f)); // inicio desde el extremo de la mano
-		model = glm::scale(model, glm::vec3(0.9f, 0.2f, 0.8f));
-		color = glm::vec3(1.0f, 0.0f, 1.0f);
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36); // E
+        // 4. Model Finger Base (Dedo normal)
+        // Partimos de la mano (pivotHand), nos movemos al extremo y un poco hacia abajo en Y
+        model = glm::translate(pivotHand, glm::vec3(0.7f, 0.3f, 0.0f)); 
+		model = glm::rotate(model, glm::radians(finger), glm::vec3(0.0f, 0.0f, 1.0f)); 
+        glm::mat4 pivotFinger = model; // Guardamos el origen de este dedo para su propia punta
+        model = glm::scale(pivotFinger, glm::vec3(0.4f, 0.2f, 0.8f));
+        color = glm::vec3(1.0f, 1.0f, 0.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // D
+
+        // 5. Model Finger Tip (Punta del dedo)
+        // Partimos de la base del dedo (pivotFinger), nos movemos hacia adelante
+        model = glm::translate(pivotFinger, glm::vec3(0.4f, -0.0f, 0.0f)); 
+		model = glm::rotate(model, glm::radians(finger_tip), glm::vec3(0.0f, 0.0f, 1.0f)); 
+        model = glm::scale(model, glm::vec3(0.4f, 0.2f, 0.8f)); // Mismo tamaño que la base para que encaje
+        color = glm::vec3(1.0f, 0.0f, 1.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // E
+
+        // 6. Model Thumb Base (Pulgar)
+        // VOLVEMOS a partir de la mano (pivotHand), no del dedo anterior. Nos movemos hacia arriba en Y.
+        model = glm::translate(pivotHand, glm::vec3(0.5f, -0.3f, 0.0f)); 
+		model = glm::rotate(model, glm::radians(thumb), glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::mat4 pivotThumb = model; // Guardamos el origen del pulgar
+        model = glm::scale(pivotThumb, glm::vec3(0.4f, 0.2f, 0.8f));
+        color = glm::vec3(1.0f, 1.0f, 0.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // F
+
+        // 7. Model Thumb Tip (Punta del pulgar)
+        model = glm::translate(pivotThumb, glm::vec3(0.4f, 0.0f, 0.0f)); 
+		model = glm::rotate(model, glm::radians(thumb_tip), glm::vec3(0.0f, 0.0f, 1.0f)); 
+        model = glm::scale(model, glm::vec3(0.4f, 0.2f, 0.8f));
+        color = glm::vec3(1.0f, 0.0f, 1.0f);
+        glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36); // G
+
+        glBindVertexArray(0);
+
+
 
 		glBindVertexArray(0);
 
@@ -341,6 +377,28 @@ void Inputs(GLFWwindow *window)
 		hand += 1.0f;
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
 		hand -= 1.0f;
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		finger -= 0.5f;
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		thumb += 0.5f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+		finger += 0.5f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+		thumb -= 0.5f;
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		finger_tip -= 1.0f;
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		thumb_tip += 1.0f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+		finger_tip += 1.0f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+		thumb_tip -= 1.0f;
+
+	{
+		hombro = 0.0f;
+		forearm = 0.0f;
+		hand = 0.0f;
+	}
 }
 
 //
