@@ -269,7 +269,7 @@ int main()
         model = glm::translate(pivotBicep, glm::vec3(1.5f, 0.0f, 0.0f)); 
         model = glm::rotate(model, glm::radians(forearm), glm::vec3(0.0f, 1.0, 0.0f));
         glm::mat4 pivotForearm = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f)); // Centro del antebrazo
-        model = glm::scale(pivotForearm, glm::vec3(2.0f, 1.0f, 1.0f));
+        model = glm::scale(pivotForearm, glm::vec3(2.0f, 0.8f, 0.8f));
         color = glm::vec3(1.0f, 0.0f, 0.0f);
         glUniform3fv(uniformColor, 1, glm::value_ptr(color));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -280,7 +280,7 @@ int main()
         model = glm::translate(pivotForearm, glm::vec3(1.0f, 0.0f, 0.0f)); 
         model = glm::rotate(model, glm::radians(hand), glm::vec3(1.0f, 0.0f, 0.0f)); 
         glm::mat4 pivotHand = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f)); // ¡MATRIZ CLAVE! Centro de la mano
-        model = glm::scale(pivotHand, glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::scale(pivotHand, glm::vec3(1.0f, 0.9f, 0.9f));
         color = glm::vec3(0.0f, 0.0f, 1.0f);
         glUniform3fv(uniformColor, 1, glm::value_ptr(color));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -394,11 +394,6 @@ void Inputs(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
 		thumb_tip -= 1.0f;
 
-	{
-		hombro = 0.0f;
-		forearm = 0.0f;
-		hand = 0.0f;
-	}
 }
 
 //
