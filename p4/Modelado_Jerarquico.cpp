@@ -27,6 +27,15 @@ float finger_tip = 0.0f;
 float thumb = 0.0f;
 float thumb_tip = 0.0f;
 
+float clampAngle(float value, float minValue, float maxValue)
+{
+	if (value < minValue)
+		return minValue;
+	if (value > maxValue)
+		return maxValue;
+	return value;
+}
+
 int main()
 {
 	glfwInit();
@@ -365,34 +374,36 @@ void Inputs(GLFWwindow *window)
 		rot += 1.0f;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		rot -= 1.0f;
+
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-		hombro += 1.0f;
+		hombro = clampAngle(hombro + 1.0f, -90.0f, 90.0f);
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-		hombro -= 1.0f;
+		hombro = clampAngle(hombro - 1.0f, -90.0f, 90.0f);
+
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
-		forearm += 1.0f;
+		forearm = clampAngle(forearm + 1.0f, -110.0f, 110.0f);
 	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
-		forearm -= 1.0f;
+		forearm = clampAngle(forearm - 1.0f, -10.0f, 110.0f);
+
 	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
-		hand += 1.0f;
+		hand = clampAngle(hand + 1.0f, -60.0f, 60.0f);
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-		hand -= 1.0f;
+		hand = clampAngle(hand - 1.0f, -90.0f, 60.0f);
+
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		finger -= 0.5f;
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		thumb += 0.5f;
+	{
+		finger = clampAngle(finger - 0.5f, -35.0f, 35.0f);
+		thumb = clampAngle(thumb + 0.5f, -30.0f, 30.0f);
+		finger_tip = clampAngle(finger_tip - 1.0f, -25.0f, 25.0f);
+		thumb_tip = clampAngle(thumb_tip + 1.0f, -25.0f, 25.0f);
+	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-		finger += 0.5f;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-		thumb -= 0.5f;
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		finger_tip -= 1.0f;
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		thumb_tip += 1.0f;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-		finger_tip += 1.0f;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
-		thumb_tip -= 1.0f;
+	{
+		finger = clampAngle(finger + 0.5f, -35.0f, 35.0f);
+		thumb = clampAngle(thumb - 0.5f, -30.0f, 30.0f);
+		finger_tip = clampAngle(finger_tip + 1.0f, -25.0f, 25.0f);
+		thumb_tip = clampAngle(thumb_tip - 1.0f, -25.0f, 25.0f);
+	}
 
 }
 
