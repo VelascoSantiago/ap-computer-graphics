@@ -399,10 +399,10 @@ void Inputs(GLFWwindow *window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
 	{
-		finger = clampAngle(finger + 0.5f, -35.0f, 35.0f);
-		thumb = clampAngle(thumb - 0.5f, -30.0f, 30.0f);
-		finger_tip = clampAngle(finger_tip + 1.0f, -25.0f, 25.0f);
-		thumb_tip = clampAngle(thumb_tip - 1.0f, -25.0f, 25.0f);
+		finger = clampAngle(finger + 0.5f, -35.0f, 15.0f);
+		thumb = clampAngle(thumb - 0.5f, -15.0f, 30.0f);
+		finger_tip = clampAngle(finger_tip + 1.0f, -25.0f, 10.0f);
+		thumb_tip = clampAngle(thumb_tip - 1.0f, -10.0f, 25.0f);
 	}
 
 }
