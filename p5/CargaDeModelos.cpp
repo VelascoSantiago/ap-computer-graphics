@@ -91,10 +91,12 @@ int main( )
     // Setup and compile our shaders
     Shader shader( "Shader/modelLoading.vs", "Shader/modelLoading.frag" );
     
-    // Load models
-    glm::mat4 projection = glm::perspective( camera.GetZoom( ), ( float )SCREEN_WIDTH/( float )SCREEN_HEIGHT, 0.1f, 100.0f );
-    
-  
+// 1. CARGAR LOS MODELOS REALES (Usa las rutas a tus archivos .obj o .fbx)
+    Model dog( (GLchar*)"Models/RedDog.obj" );
+    Model skull( (GLchar*)"Models/12140_Skull_v3_L2.obj" );
+
+    // 2. CREAR LA MATRIZ DE PROYECCIÓN 
+    glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     // Game loop
     while (!glfwWindowShouldClose(window))
@@ -112,16 +114,34 @@ int main( )
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // 3. ACTIVAR EL SHADER
         shader.Use();
 
+        // Enviar Vista y Proyección (estas aplican para toda la escena)
         glm::mat4 view = camera.GetViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        // Draw the loaded model
-        glm::mat4 model(1);
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        // 4. POSICIONAR Y DIBUJAR AL PERRO
+        glm::mat4 modelMatrixDog = glm::mat4(1.0f);
+        modelMatrixDog = glm::translate(modelMatrixDog, glm::vec3(-3.0f, 0.0f, 0.0f)); // Mueve 3 a la izq
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrixDog));
+        dog.Draw(shader); // Ahora sí usas el objeto Model
+
+        // 5. POSICIONAR Y DIBUJAR AL CRÁNEO
+        glm::mat4 modelMatrixSkull = glm::mat4(1.0f);
+        // Lo movemos a la derecha (X=3) y hacia atrás (Z=-5)
+        modelMatrixSkull = glm::translate(modelMatrixSkull, glm::vec3(3.0f, 0.0f, -5.0f));
         
+        // ¡CRÍTICO! Los modelos con nombres como "12140_Skull" suelen ser ENORMES. 
+        // Redúcelo radicalmente al 1% o 5% de su tamaño para encontrarlo:
+        modelMatrixSkull = glm::scale(modelMatrixSkull, glm::vec3(0.05f)); 
+        
+        // (Opcional) A veces salen acostados. Si no lo ves de frente, descomenta esta línea para pararlo:
+        modelMatrixSkull = glm::rotate(modelMatrixSkull, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrixSkull));
+        skull.Draw(shader);
 
         // Swap the buffers
         glfwSwapBuffers( window );
