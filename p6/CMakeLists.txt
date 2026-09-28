@@ -8,15 +8,6 @@ foreach(SOURCE ${SOURCES})
         ${CMAKE_SOURCE_DIR}/dependencias/glm
     )
     target_link_libraries(${TARGET_NAME}_${SOURCE_NAME} PRIVATE OpenGL::GL glfw glad)
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Model.h)
-        find_package(assimp REQUIRED)
-        target_link_libraries(${TARGET_NAME}_${SOURCE_NAME} PRIVATE assimp)
-    endif()
 endforeach()
-
-foreach(RES Shader images Models)
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${RES})
-        file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/${RES}
-                         ${CMAKE_CURRENT_BINARY_DIR}/${RES} SYMBOLIC)
-    endif()
-endforeach()
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Shader DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

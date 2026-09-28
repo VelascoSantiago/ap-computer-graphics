@@ -124,18 +124,18 @@ int main( )
 
         // 4. POSICIONAR Y DIBUJAR AL PERRO
         glm::mat4 modelMatrixDog = glm::mat4(1.0f);
-        modelMatrixDog = glm::translate(modelMatrixDog, glm::vec3(-3.0f, 0.0f, 0.0f)); // Mueve 3 a la izq
+        modelMatrixDog = glm::translate(modelMatrixDog, glm::vec3(-1.0f, 0.0f, 0.0f)); // Mueve 1 a la izq
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrixDog));
         dog.Draw(shader); // Ahora sí usas el objeto Model
 
         // 5. POSICIONAR Y DIBUJAR AL CRÁNEO
         glm::mat4 modelMatrixSkull = glm::mat4(1.0f);
         // Lo movemos a la derecha (X=3) y hacia atrás (Z=-5)
-        modelMatrixSkull = glm::translate(modelMatrixSkull, glm::vec3(3.0f, 0.0f, -5.0f));
+        modelMatrixSkull = glm::translate(modelMatrixSkull, glm::vec3(1.0f, 0.0f, 0.0f));
         
         // ¡CRÍTICO! Los modelos con nombres como "12140_Skull" suelen ser ENORMES. 
         // Redúcelo radicalmente al 1% o 5% de su tamaño para encontrarlo:
-        modelMatrixSkull = glm::scale(modelMatrixSkull, glm::vec3(0.05f)); 
+        modelMatrixSkull = glm::scale(modelMatrixSkull, glm::vec3(0.03f)); 
         
         // (Opcional) A veces salen acostados. Si no lo ves de frente, descomenta esta línea para pararlo:
         modelMatrixSkull = glm::rotate(modelMatrixSkull, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
