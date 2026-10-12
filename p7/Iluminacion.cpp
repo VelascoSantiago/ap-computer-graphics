@@ -100,7 +100,8 @@ int main()
 
 
     // Load models
-    Model red_dog((char*)"Models/RedDog.obj");
+    //Model red_dog((char*)"Models/RedDog.obj");
+    Model edificio((char*)"Models/Building/building.obj");
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     float vertices[] = {
@@ -215,8 +216,8 @@ int main()
 
         // Set lights properties
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.3f, 0.3f, 0.3f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.3f, 0.3f, 0.3f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 0.5f, 0.5f, 0.5f);
 
 
 
@@ -227,19 +228,22 @@ int main()
 
         // Set material properties
         glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 1.0f, 1.0f, 1.0f);
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.8f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.1f, 0.1f, 0.1f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.4f);
 
 
 
         // Draw the loaded model
         glm::mat4 model(1);
-        model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+        float edificioScale = 8.0f;
+        model = glm::scale(model, glm::vec3(edificioScale, edificioScale, edificioScale));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         glBindVertexArray(VAO);
 
-        red_dog.Draw(lightingShader);
+        //red_dog.Draw(lightingShader);
+        edificio.Draw(lightingShader);
+        
        
         //glDrawArrays(GL_TRIANGLES, 0, 36);
         

@@ -55,9 +55,9 @@ fi
 # "Target links to GLEW::GLEW but the target was not found".
 cp template/CMakeLists.txt "$DIR/CMakeLists.txt"
 
-# NO compilamos acá a propósito: si el origen trae código con GLEW viejo,
-# primero hay que correr fix_glew.py (paso 2 del pipeline). Compilar antes
-# de eso produce errores de "undefined reference to __glewXxx".
+# Trae de prácticas anteriores los modelos/texturas/shaders que el .cpp referencia
+python3 resolver_assets.py "$DIR"
+
 echo ""
 echo "Listo. Antes de compilar, revisa si el código trae GLEW viejo:"
 echo "  python3 fix_glew.py $DIR"

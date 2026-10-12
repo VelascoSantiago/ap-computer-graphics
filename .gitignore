@@ -7,3 +7,4 @@ bin/
 *.a
 *.exe
 .vscode/
+teo-models/
