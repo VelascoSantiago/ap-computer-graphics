@@ -83,7 +83,16 @@ void main( )
     // Spot light
     result += CalcSpotLight( spotLight, norm, FragPos, viewDir );
  	
-    color = vec4( result,texture(material.diffuse, TexCoords).rgb );
+    // Extraemos el color de la textura
+    vec4 texColor = texture(material.diffuse, TexCoords);
+    float alphaFinal = texColor.a; // Tomamos el alfa original
+
+    // Si el color es muy oscuro (casi negro), asumimos que es el vidrio y bajamos su opacidad
+    if(texColor.r < 0.15 && texColor.g < 0.15 && texColor.b < 0.15) {
+        alphaFinal = 0.3; // 30% de opacidad para simular cristal
+    }
+
+    color = vec4(result, alphaFinal);
 	  if(color.a < 0.1 && transparency==1)
         discard;
 
