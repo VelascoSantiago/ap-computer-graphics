@@ -154,7 +154,11 @@ private:
 			// Normal: texture_normalN
 
 			// 1. Diffuse maps
-			vector<Texture> diffuseMaps = this->loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			const aiTextureType diffuseType =
+				material->GetTextureCount(aiTextureType_BASE_COLOR) > 0
+					? aiTextureType_BASE_COLOR
+					: aiTextureType_DIFFUSE;
+			vector<Texture> diffuseMaps = this->loadMaterialTextures(material, diffuseType, "texture_diffuse");
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
 			// 2. Specular maps

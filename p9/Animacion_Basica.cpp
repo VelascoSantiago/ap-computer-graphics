@@ -157,9 +157,11 @@ int main()
 	
 	//models
 	Model Dog((char*)"Models/RedDog.obj");
+	Model Madara((char*)"Models/Madara/Madara_Uchiha.obj");
 	Model Piso((char*)"Models/piso.obj");
 	Model Ball((char*)"Models/ball.obj");
-
+	Model Chick((char*)"Models/Chick/scene.gltf");
+	
 
 
 	// First, set the container's VAO (and VBO)
@@ -285,17 +287,29 @@ int main()
 		model = glm::mat4(1);
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
-		Dog.Draw(lightingShader);
+		//Dog.Draw(lightingShader);
+		model = glm::mat4(1);
+		model = glm::scale(model, glm::vec3(0.3f)); 
+		model = glm::translate(model, glm::vec3(0.0f, -1.2f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+		Madara.Draw(lightingShader);
+		
 
 		model = glm::mat4(1);
-		glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		const float orbitAngle = glm::radians(rotBall);
+		model = glm::translate(model, glm::vec3(
+			0.2f * cos(orbitAngle),
+			0.9f,
+			0.2f * sin(orbitAngle)
+		));
+		model = glm::rotate(model, -orbitAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.00025f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
-		model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	    Ball.Draw(lightingShader); 
-		glDisable(GL_BLEND);  //Desactiva el canal alfa 
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
+		Chick.Draw(lightingShader);
 		glBindVertexArray(0);
 	
 
@@ -442,8 +456,8 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 void Animation() {
 	if (AnimBall)
 	{
-		rotBall += 0.5f;
-		printf("%f", rotBall);
+		rotBall += 120.0f * deltaTime;
+		//printf("%f", rotBall);
 	}
 	else
 	{
